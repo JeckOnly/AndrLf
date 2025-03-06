@@ -1,4 +1,6 @@
-package jeck.only.andrlf.ksp_learn
+package jeck.only.andrlf.kt_learn
+
+import com.sjy.processor.ksp_learn.GenerateToString
 
 /**
  * Created by JeckOnly on 2025/3/6

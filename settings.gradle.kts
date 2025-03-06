@@ -32,6 +32,7 @@ pluginManagement {
             isAllowInsecureProtocol = true
             url = uri("http://192.168.10.60:8081/nexus/repository/android-group")
         }
+        mavenLocal()
         google {
             content {
                 includeGroupByRegex("com\\.android.*")
@@ -78,6 +79,23 @@ dependencyResolutionManagement {
             isAllowInsecureProtocol = true
             url = uri("http://192.168.10.60:8081/nexus/repository/android-group")
         }
+        maven {
+            isAllowInsecureProtocol = true
+            url = uri("http://192.168.10.60:8081/nexus/repository/tencent-maven/")
+        }
+        maven {
+            isAllowInsecureProtocol = true
+            url = uri("http://192.168.10.60:8081/nexus/repository/AwemeOpenSDK/")
+        }
+        maven {
+            isAllowInsecureProtocol = true
+            url = uri("http://192.168.10.60:8081/nexus/repository/pangle/")
+        }
+        maven {
+            isAllowInsecureProtocol = true
+            url = uri("http://192.168.10.60:8081/nexus/repository/Volcengine/")
+        }
+        mavenLocal()
         google()
         mavenCentral()
     }
@@ -85,4 +103,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "AndrLf"
 include(":app")
- 
+include(":processor")

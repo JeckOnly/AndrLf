@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
 
+    id("com.google.devtools.ksp") version "2.1.0-1.0.29"
+
 }
 
 android {
@@ -58,7 +60,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    implementation("com.google.devtools.ksp:symbol-processing-api:1.6.10-1.0.2")
-    implementation("com.squareup:kotlinpoet:2.1.0")
+    implementation(project(":processor")) // 为了能够引入注解
+    ksp(project(":processor")) // 为了生成代码
 
 }

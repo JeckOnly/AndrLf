@@ -1,4 +1,4 @@
-package jeck.only.andrlf.ksp_learn
+package com.sjy.processor.ksp_learn
 
 import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.KSPLogger
@@ -16,8 +16,6 @@ import com.google.devtools.ksp.validate
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
-import com.squareup.kotlinpoet.KModifier
-import com.squareup.kotlinpoet.TypeSpec
 
 /**
  * Created by JeckOnly on 2025/3/6
@@ -37,6 +35,7 @@ class GenerateStringProcessor(options: Map<String, String>, val logger: KSPLogge
     override fun process(resolver: Resolver): List<KSAnnotated> {
 
         val symbols = resolver.getSymbolsWithAnnotation(GenerateToString::class.qualifiedName!!).filterNot { it.validate() }
+        logger.warn("symbols: $symbols")
         symbols.filter { it is KSClassDeclaration && it.validate() }
             .forEach { it.accept(GenerateStringVisitor(logger = logger, codeGenerator = codeGenerator), Unit) }
 
@@ -118,6 +117,7 @@ class GenerateStringVisitor(private val logger: KSPLogger, private val codeGener
                 .build()
         ).build()
 
+        logger.warn("生成代码文件: $packageName.$fileName")
         // 写入文件
         codeGenerator.createNewFile(
             dependencies = Dependencies(aggregating = false),
