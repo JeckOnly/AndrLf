@@ -1,5 +1,37 @@
 pluginManagement {
     repositories {
+        // LAN
+        maven {
+            isAllowInsecureProtocol = true
+            url = uri("http://192.168.10.60:8081/nexus/repository/public")
+        }
+        maven {
+            isAllowInsecureProtocol = true
+            url = uri("http://192.168.10.60:8081/nexus/repository/central")
+        }
+
+        maven {
+            isAllowInsecureProtocol = true
+            url = uri("http://192.168.10.60:8081/nexus/repository/jitpack/")
+        }
+
+        maven {
+            isAllowInsecureProtocol = true
+            url = uri("http://192.168.10.60:8081/nexus/repository/google")
+        }
+
+        maven {
+            isAllowInsecureProtocol = true
+            url = uri("http://192.168.10.60:8081/nexus/repository/maven-public/")
+        }
+        maven {
+            isAllowInsecureProtocol = true
+            url = uri("http://192.168.10.60:8081/nexus/repository/android-group-snapshot")
+        }
+        maven {
+            isAllowInsecureProtocol = true
+            url = uri("http://192.168.10.60:8081/nexus/repository/android-group")
+        }
         google {
             content {
                 includeGroupByRegex("com\\.android.*")
@@ -14,6 +46,38 @@ pluginManagement {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
+        // LAN
+        maven {
+            isAllowInsecureProtocol = true
+            url = uri("http://192.168.10.60:8081/nexus/repository/public")
+        }
+        maven {
+            isAllowInsecureProtocol = true
+            url = uri("http://192.168.10.60:8081/nexus/repository/central")
+        }
+
+        maven {
+            isAllowInsecureProtocol = true
+            url = uri("http://192.168.10.60:8081/nexus/repository/jitpack/")
+        }
+
+        maven {
+            isAllowInsecureProtocol = true
+            url = uri("http://192.168.10.60:8081/nexus/repository/google")
+        }
+
+        maven {
+            isAllowInsecureProtocol = true
+            url = uri("http://192.168.10.60:8081/nexus/repository/maven-public/")
+        }
+        maven {
+            isAllowInsecureProtocol = true
+            url = uri("http://192.168.10.60:8081/nexus/repository/android-group-snapshot")
+        }
+        maven {
+            isAllowInsecureProtocol = true
+            url = uri("http://192.168.10.60:8081/nexus/repository/android-group")
+        }
         google()
         mavenCentral()
     }
