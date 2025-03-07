@@ -12,3 +12,7 @@ class TestGenerateToString(val name: String, val id: Int) {
 
 
 }
+
+fun main() {
+    TestGenerateToString("Jeck", 1).toString2()
+}

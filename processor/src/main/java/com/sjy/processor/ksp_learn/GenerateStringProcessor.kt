@@ -21,7 +21,7 @@ import com.squareup.kotlinpoet.FunSpec
  * Created by JeckOnly on 2025/3/6
  * Describe:
  */
-class GenerateStringProcessorProvider: SymbolProcessorProvider {
+class GenerateStringProcessorProvider : SymbolProcessorProvider {
     override fun create(environment: SymbolProcessorEnvironment): SymbolProcessor {
         return GenerateStringProcessor(
             options = environment.options,
@@ -31,25 +31,41 @@ class GenerateStringProcessorProvider: SymbolProcessorProvider {
     }
 }
 
-class GenerateStringProcessor(options: Map<String, String>, val logger: KSPLogger, val codeGenerator: CodeGenerator): SymbolProcessor {
+class GenerateStringProcessor(
+    options: Map<String, String>,
+    val logger: KSPLogger,
+    val codeGenerator: CodeGenerator
+) : SymbolProcessor {
     override fun process(resolver: Resolver): List<KSAnnotated> {
 
-        val symbols = resolver.getSymbolsWithAnnotation(GenerateToString::class.qualifiedName!!).filterNot { it.validate() }
-        logger.warn("symbols: $symbols")
+        val symbols = resolver.getSymbolsWithAnnotation("com.sjy.processor.ksp_learn.GenerateToString")
+            .filter { it.validate() }
+//        symbols.forEach {
+//            logger.warn("symbol: $it, type: ${it::class.simpleName}, origin: ${it.origin}")
+//        }
         symbols.filter { it is KSClassDeclaration && it.validate() }
-            .forEach { it.accept(GenerateStringVisitor(logger = logger, codeGenerator = codeGenerator), Unit) }
+            .forEach {
+                // log name
+                logger.warn("symbol KSClassDeclaration: ${(it as KSClassDeclaration)} isCompanion: ${it.isCompanionObject}")
+                it.accept(
+                    GenerateStringVisitor(logger = logger, codeGenerator = codeGenerator),
+                    Unit
+                )
+            }
 
         return symbols.toList()
 
     }
 }
 
-class GenerateStringVisitor(private val logger: KSPLogger, private val codeGenerator: CodeGenerator): KSVisitorVoid() {
+class GenerateStringVisitor(
+    private val logger: KSPLogger,
+    private val codeGenerator: CodeGenerator
+) : KSVisitorVoid() {
 
     private lateinit var className: String
     private lateinit var packageName: String
     private val properties: MutableList<String> = mutableListOf()
-
 
 
     override fun visitClassDeclaration(classDeclaration: KSClassDeclaration, data: Unit) {
@@ -75,6 +91,7 @@ class GenerateStringVisitor(private val logger: KSPLogger, private val codeGener
         //2. 解析Class信息
         className = qualifiedName
         packageName = classDeclaration.packageName.asString()
+        logger.warn("className: $className, packageName: $packageName")
 
         classDeclaration.getAllProperties()
             .forEach {
@@ -91,20 +108,10 @@ class GenerateStringVisitor(private val logger: KSPLogger, private val codeGener
 
         // 函数内容
         val classNameWithoutPackage = className.substringAfterLast('.')
-        val toStringContent = buildString {
-            append("override fun toString(): String {\n")
-            append("    return \"$classNameWithoutPackage(\"\n")
-            properties.forEachIndexed { index, name ->
-                append("        + \"$name=\${$name}\"")
-                if (index < properties.size - 1) {
-                    append(" + \", \"\n")
-                } else {
-                    append("\n")
-                }
-            }
-            append("        + \")\"\n")
-            append("}\n")
-        }
+
+        val toStringContent = """
+        return "$classNameWithoutPackage(${properties.joinToString(", ") { "$it=\${$it}" }})"
+        """.trimIndent()
 
         val fileName = "${classNameWithoutPackage}_to_string"
 
@@ -120,7 +127,7 @@ class GenerateStringVisitor(private val logger: KSPLogger, private val codeGener
         logger.warn("生成代码文件: $packageName.$fileName")
         // 写入文件
         codeGenerator.createNewFile(
-            dependencies = Dependencies(aggregating = false),
+            dependencies = Dependencies(aggregating = true, sources = listOf(classDeclaration.containingFile!!).toTypedArray()),
             packageName = packageName,
             fileName = fileName
         ).use { outputStream ->
