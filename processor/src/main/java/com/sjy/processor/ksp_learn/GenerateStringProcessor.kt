@@ -37,23 +37,21 @@ class GenerateStringProcessor(
     val codeGenerator: CodeGenerator
 ) : SymbolProcessor {
     override fun process(resolver: Resolver): List<KSAnnotated> {
-
+        logger.warn("process执行")
         val symbols = resolver.getSymbolsWithAnnotation("com.sjy.processor.ksp_learn.GenerateToString")
             .filter { it.validate() }
-//        symbols.forEach {
-//            logger.warn("symbol: $it, type: ${it::class.simpleName}, origin: ${it.origin}")
-//        }
-        symbols.filter { it is KSClassDeclaration && it.validate() }
+        val list = symbols.toList()
+        list.filter { it is KSClassDeclaration && it.validate() }
             .forEach {
                 // log name
-                logger.warn("symbol KSClassDeclaration: ${(it as KSClassDeclaration)} isCompanion: ${it.isCompanionObject}")
+                logger.warn("symbol KSClassDeclaration: ${(it as KSClassDeclaration)} qualifiedName: ${it.qualifiedName?.asString()}")
                 it.accept(
                     GenerateStringVisitor(logger = logger, codeGenerator = codeGenerator),
                     Unit
                 )
             }
 
-        return symbols.toList()
+        return emptyList()
 
     }
 }
