@@ -2,8 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-
-    id("com.google.devtools.ksp") version "2.1.0-1.0.29"
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
 
 }
 
@@ -62,5 +62,18 @@ dependencies {
 
     implementation(project(":processor")) // 为了能够引入注解
     ksp(project(":processor")) // 为了生成代码
+
+    //Dagger - Hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
+
+    // Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.3")
+//    implementation "com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.3"
+    // gson
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+    // moshi
+    implementation("com.squareup.retrofit2:converter-moshi:2.11.0")
 
 }
