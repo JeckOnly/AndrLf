@@ -104,3 +104,4 @@ dependencyResolutionManagement {
 rootProject.name = "AndrLf"
 include(":app")
 include(":processor")
+include(":nativelib")
