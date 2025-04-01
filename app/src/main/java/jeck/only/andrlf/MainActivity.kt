@@ -12,10 +12,14 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.nativelib.NativeLib
+import jeck.only.andrlf.feature.getInstalledApps
 import jeck.only.andrlf.ui.theme.AndrLfTheme
+import kotlinx.coroutines.launch
+import kotlin.contracts.contract
 
 class MainActivity : ComponentActivity() {
 
@@ -26,6 +30,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AndrLfTheme {
+
+                val scope = rememberCoroutineScope()
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Column {
                         Greeting(
@@ -47,6 +53,19 @@ class MainActivity : ComponentActivity() {
                             }
                         ) {
                             Text("Call NativeLib ramonToInt")
+                        }
+
+                        Button(
+                            onClick = {
+                                scope.launch {
+                                    val appList = getInstalledApps(context = this@MainActivity)
+                                    appList.forEach {
+                                        Log.d("app", it.packageName.toString())
+                                    }
+                                }
+                            }
+                        ) {
+                            Text("获取设备所有应用")
                         }
 
                     }
